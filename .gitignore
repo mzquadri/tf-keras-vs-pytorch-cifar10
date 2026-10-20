@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Keras / TensorFlow caches
+*.keras
+*.h5
+.keras/
+
+# The CIFAR-10 download cache - fetched by Keras, never committed
+data/cifar-10-batches-py/
+data/*.tar.gz
+
+# OS
+Thumbs.db
+.DS_Store

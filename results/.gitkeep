@@ -1,0 +1,5 @@
+# Training runs write their JSON record here.
+#
+# `python train.py --out results/keras_results.json`
+#
+# This file exists only so the directory is tracked by git while empty.
