@@ -1,0 +1,11 @@
+# Pinned, and in one place.
+#
+# These two versions were written into the Dockerfile and nowhere else, so CI
+# had to repeat them to install the same thing. Two copies of a pin is how a
+# build and a check quietly start testing different libraries. The Dockerfile
+# installs from this file now, and so does the workflow.
+#
+# tensorflow-cpu rather than tensorflow: this trains on a CPU and the default
+# wheel carries the CUDA libraries, several gigabytes that would never load.
+tensorflow-cpu==2.20.0
+numpy==2.1.3

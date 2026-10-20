@@ -25,14 +25,16 @@ jobs:
           python-version: "3.11"
           cache: pip
 
-      # Pinned to the Dockerfile's versions rather than floating. A parameter
-      # count is a claim about this architecture under this Keras; letting the
-      # version drift would turn an upstream change in how BatchNormalization
-      # reports its weights into a failure of the translation, which it is not.
+      # From requirements.txt, which the Dockerfile also installs from, so a
+      # pass here means the same thing as a pass in the image. Pinned rather
+      # than floating: a parameter count is a claim about this architecture
+      # under this Keras, and letting the version drift would turn an upstream
+      # change in how BatchNormalization reports its weights into an apparent
+      # failure of the translation, which it would not be.
       - name: Install TensorFlow, CPU only
         run: |
           python -m pip install --upgrade pip
-          python -m pip install "tensorflow-cpu==2.20.0" "numpy==2.1.3"
+          python -m pip install -r requirements.txt
 
       - name: Assert the count matches the PyTorch reference
         env:
