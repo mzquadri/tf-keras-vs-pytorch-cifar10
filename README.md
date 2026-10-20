@@ -17,7 +17,7 @@ matched, and what each one costs.
 | **Training subset** | 13,500 train + 1,500 validation = 15,000 images |
 | **Test set** | 10,000 images (the full CIFAR-10 test split) |
 | **Architecture** | Custom 3-block CNN with Batch Normalization |
-| **Parameters** | **815,018 trainable**, asserted at runtime |
+| **Parameters** | **815,018 trainable**, asserted on every push |
 | **Framework** | TensorFlow / Keras |
 | **PyTorch baseline** | 64.26% test accuracy |
 | **Keras test accuracy** | *pending the Colab run - see `results/`* |
@@ -74,12 +74,20 @@ dense2  256*10   + 10  =  2,570
                           815,018
 ```
 
-`train.py` exits non-zero if the built model disagrees with that number. Two models with
-the same block diagram and different parameter counts are not the same model, and the
-count is the cheapest way to catch a wrong channel width, a missing bias, or a
-BatchNorm on the wrong axis. BatchNorm contributes `2*C` trainable (gamma, beta) and
+`train.py` exits non-zero if the built model disagrees with that number, and so does
+`check_parameters.py`, which CI runs on every push. The second one exists because the
+first only runs when you train, and training runs in Colab on a GPU: the number was as
+true as somebody's memory of the last run. Building the model needs no data, no compile
+and no fit, so checking it costs a second on a CPU.
+
+Two models with the same block diagram and different parameter counts are not the same
+model, and the count is the cheapest way to catch a wrong channel width, a missing bias,
+or a BatchNorm on the wrong axis. BatchNorm contributes `2*C` trainable (gamma, beta) and
 `2*C` non-trainable (running mean, variance); PyTorch's count includes only the
 trainable ones, so that is what is compared.
+
+It is a floor and not a proof. The section on the two dropout rates below is the worked
+example of what it does not catch.
 
 ## What differs, and why it cannot be matched
 
